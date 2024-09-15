@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Input Example</title>
+</head>
+<body>
+
+<input type="text" id="voiceInput" placeholder="Click and hold to start voice input">
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const voiceInput = document.getElementById('voiceInput');
+
+  // Check browser support
+  if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+    // Set recognition language if needed
+    recognition.lang = 'en-US';
+
+    // Handle recognition results
+    recognition.onresult = function (event) {
+      const result = event.results[0][0].transcript;
+      voiceInput.value = result;
+    };
+
+    // Handle errors
+    recognition.onerror = function (event) {
+      console.error('Speech recognition error:', event.error);
+    };
+
+    // Start recognition when the input is clicked and held
+    let recognitionActive = false;
+    voiceInput.addEventListener('mousedown', function () {
+      if (!recognitionActive) {
+        recognition.start();
+        recognitionActive = true;
+      }
+    });
+
+    // Stop recognition when the input loses focus
+    voiceInput.addEventListener('blur', function () {
+      if (recognitionActive) {
+        recognition.stop();
+        recognitionActive = false;
+      }
+    });
+  } else {
+    // Web Speech API is not supported
+    alert("Sorry, your browser doesn't support the Web Speech API. Please try using a different browser.");
+  }
+});
+</script>
+
+</body>
+</html>

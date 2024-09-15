@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Text File</title>
+</head>
+<body>
+    <form id="textFileForm">
+        <label for="fileContent">Enter Text:</label><br>
+        <textarea id="fileContent" name="fileContent" rows="4" cols="50"></textarea><br>
+        <input type="button" value="Create Text File" onclick="createTextFile()">
+    </form>
+
+    <script>
+        function createTextFile() {
+            // Get the text content from the input
+            var text = document.getElementById("fileContent").value+"hello";
+
+            // Create a Blob object with the text content
+            var blob = new Blob([text], { type: "text/plain" });
+            // blob = new Blob(["AYUSH"], { type: "text/plain" });
+            // Create an anchor element to trigger the download
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "mytextfile.ino";
+            a.style.display = "none";
+
+            // Append the anchor element and trigger a click event to start the download
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

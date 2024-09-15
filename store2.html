@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Website</title>
+    <style>
+        /* Your existing CSS styles here */
+    </style>
+</head>
+<body>
+    <div class="blindupper">Blindkart</div>
+
+    <div class="product-box">
+        <div class="product" id="product1">
+            <img src="images/stick.png" alt="Product 1">
+            <p>Product 1 Description</p>
+            <button class="add-to-cart-btn" value="1">Add to Cart</button>
+            <button class="remove-from-cart-btn" value="1">Remove from Cart</button>
+        </div>
+        <div class="product" id="product2">
+            <img src="images/myproject.jpg" alt="Product 2">
+            <p>Product 2 Description</p>
+            <button class="add-to-cart-btn" value="2">Add to Cart</button>
+            <button class="remove-from-cart-btn" value="2">Remove from Cart</button>
+        </div>
+    </div>
+
+    <!-- Add more product boxes as needed -->
+
+    <div class="shopping-cart">
+        <h2>Shopping Cart</h2>
+        <ul id="cart-items">
+            <!-- Cart items will be added dynamically -->
+        </ul>
+        <button id="checkout-btn">Checkout</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cartItems = document.getElementById('cart-items');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            // Check if there are items in the cart stored in local storage
+            const savedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+            // Function to render the cart items
+            function renderCartItems() {
+                cartItems.innerHTML = ''; // Clear previous items
+
+                savedCartItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item.description;
+                    cartItems.appendChild(li);
+                });
+            }
+
+            // Function to handle adding items to the cart
+            function addToCart(productDescription) {
+                const newItem = { description: productDescription };
+                savedCartItems.push(newItem);
+
+                // Save the updated cart to local storage
+                localStorage.setItem('cartItems', JSON.stringify(savedCartItems));
+
+                // Update the displayed cart items
+                renderCartItems();
+            }
+
+            // Function to handle removing items from the cart
+            function removeFromCart(productDescription) {
+                // Find the index of the item in the cart
+                const index = savedCartItems.findIndex(item => item.description === productDescription);
+
+                // Remove the item if found
+                if (index !== -1) {
+                    savedCartItems.splice(index, 1);
+
+                    // Save the updated cart to local storage
+                    localStorage.setItem('cartItems', JSON.stringify(savedCartItems));
+
+                    // Update the displayed cart items
+                    renderCartItems();
+                }
+            }
+
+            // Event listener for Add to Cart buttons
+            const addToCartButtons = document.querySelectorAll('.product button[value]');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productDescription = this.parentNode.querySelector('p').textContent;
+                    addToCart(productDescription);
+                });
+            });
+
+            // Event listener for Remove from Cart buttons
+            const removeFromCartButtons = document.querySelectorAll('.product button:not([value])');
+            removeFromCartButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productDescription = this.parentNode.querySelector('p').textContent;
+                    removeFromCart(productDescription);
+                });
+            });
+
+            // Initial rendering of cart items
+            renderCartItems();
+
+            // Event listener for Checkout button
+            checkoutBtn.addEventListener('click', function () {
+                // Redirect to the billing website (you should replace 'billing.html' with your actual billing page)
+                window.location.href = 'billing.html';
+            });
+        });
+    </script>
+</body>
+</html>
